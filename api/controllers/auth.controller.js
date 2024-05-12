@@ -24,7 +24,6 @@ export const signin = async (req, res, next) => {
     // query db for the email, result is the whole user object (and then some additional)
     const validUser = await User.findOne({ email });
     if (!validUser) {
-      console.log('no user found');
       return next(errorHandler(404, 'User not found'));
     }
 
@@ -35,7 +34,6 @@ export const signin = async (req, res, next) => {
     }
 
     const { password: pass, ...restOfUserObject } = validUser._doc;
-    console.log(restOfUserObject);
 
     const token = jwt.sign(
       { id: restOfUserObject._id },
