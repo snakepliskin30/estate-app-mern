@@ -1,5 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
+import { errorHandler } from '../utils/error-handler.js';
+import jwt from 'jsonwebtoken';
 
 export const signup = async (req, res, next) => {
   // await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -10,6 +12,40 @@ export const signup = async (req, res, next) => {
   try {
     await newUser.save();
     res.status(201).json('User created successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    // query db for the email, result is the whole user object (and then some additional)
+    const validUser = await User.findOne({ email });
+    if (!validUser) {
+      console.log('no user found');
+      return next(errorHandler(404, 'User not found'));
+    }
+
+    // compare passwords
+    const passwordMatch = bcryptjs.compareSync(password, validUser.password);
+    if (!passwordMatch) {
+      return next(errorHandler(401, 'Invalid credentials'));
+    }
+
+    const { password: pass, ...restOfUserObject } = validUser._doc;
+    console.log(restOfUserObject);
+
+    const token = jwt.sign(
+      { id: restOfUserObject._id },
+      process.env.JWT_SECRET,
+    );
+
+    res
+      .cookie('access-token', token, { httpOnly: true })
+      .status(200)
+      .json(restOfUserObject);
   } catch (err) {
     next(err);
   }
