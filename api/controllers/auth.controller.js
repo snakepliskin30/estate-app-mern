@@ -49,3 +49,42 @@ export const signin = async (req, res, next) => {
     next(err);
   }
 };
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    let userObject;
+    const { username, email, photoUrl } = req.body;
+    console.log(username, email, photoUrl);
+
+    // check if email exist already
+    const validUser = await User.findOne({ email });
+    console.log('validUser', validUser);
+
+    if (!validUser) {
+      const password =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        username:
+          username.split(' ').join('').toLowerCase() +
+          Math.random().toString(36).slice(-4),
+        email,
+        password,
+        avatar: photoUrl,
+      });
+      const newUserObject = await newUser.save();
+      const { password: pass, ...rest } = newUserObject._doc;
+      userObject = rest;
+    } else {
+      const { password, ...rest } = validUser._doc;
+      userObject = rest;
+    }
+
+    console.log('user_object', userObject);
+
+    const token = jwt.sign({ id: userObject._id }, process.env.JWT_SECRET);
+    res.cookie('access-token', token).status(200).json(userObject);
+  } catch (err) {
+    next(err);
+  }
+};
