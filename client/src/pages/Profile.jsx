@@ -32,6 +32,7 @@ export default function Profile() {
         setFilePercent(progressRounded);
       },
       (err) => {
+        console.log(err.message);
         setFileUploadError(true);
       },
       () => {
@@ -55,10 +56,22 @@ export default function Profile() {
     }
   }, [file]);
 
+  const handleSubmit = async () => {
+    const res = await fetch('/api/user/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+  };
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
-      <form className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           type='file'
           ref={fileRef}
