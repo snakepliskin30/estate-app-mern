@@ -38,3 +38,19 @@ export const updateUser = async (req, res, next) => {
     next(err);
   }
 };
+
+export const deleteUser = async (req, res, next) => {
+  if (req.params.id !== req.user.id)
+    return next(errorHandler(401, 'Please log in'));
+
+  try {
+    await User.findByIdAndDelete(req.params.id);
+
+    res
+      .clearCookie('access-token')
+      .status(200)
+      .json({ message: 'Deleted account successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
