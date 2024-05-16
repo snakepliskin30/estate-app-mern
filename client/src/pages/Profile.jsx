@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   getDownloadURL,
   getStorage,
@@ -7,14 +7,21 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../firebase';
+import {
+  updateStart,
+  updateSuccess,
+  updateFailure,
+} from '../redux/user/userSlice';
 
 export default function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, isLoading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const fileRef = useRef(null);
   const [formData, setFormData] = useState({});
   const [filePercent, setFilePercent] = useState('');
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [updateSuccessful, setUpdateSuccessful] = useState(false);
+  const dispatch = useDispatch();
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -56,16 +63,30 @@ export default function Profile() {
     }
   }, [file]);
 
-  const handleSubmit = async () => {
-    const res = await fetch('/api/user/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(updateStart());
 
-    const data = await res.json();
+    try {
+      const res = await fetch(`/api/user/userupdate/${currentUser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        dispatch(updateFailure(data.message));
+      } else {
+        setUpdateSuccessful(true);
+        dispatch(updateSuccess(data));
+      }
+    } catch (err) {
+      dispatch(updateFailure(err.message));
+    }
   };
 
   return (
@@ -95,6 +116,7 @@ export default function Profile() {
         ) : null}
         <input
           type='text'
+          defaultValue={currentUser.username}
           placeholder='username'
           id='username'
           className='border p-3 rounded-lg'
@@ -102,24 +124,34 @@ export default function Profile() {
         />
         <input
           type='email'
+          defaultValue={currentUser.email}
           placeholder='email'
           id='email'
           className='border p-3 rounded-lg'
+          onChange={handleChangeData}
         />
         <input
           type='text'
           placeholder='password'
           id='password'
           className='border p-3 rounded-lg'
+          onChange={handleChangeData}
         />
-        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>
-          update
+        <button
+          disabled={isLoading}
+          className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'
+        >
+          {isLoading ? 'updating info' : 'update'}
         </button>
       </form>
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer'>Delete account</span>
         <span className='text-red-700 cursor-pointer'>Sign out</span>
       </div>
+      {error ? <p className='text-red-700'>{error}</p> : null}
+      {!error && updateSuccessful ? (
+        <p className='text-green-700'>Update successful!</p>
+      ) : null}
     </div>
   );
 }
