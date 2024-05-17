@@ -1,6 +1,82 @@
-import React from 'react';
+import { useState } from 'react';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../firebase';
 
 export default function CreateListing() {
+  const [files, setFiles] = useState({});
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [fileUploadError, setFileUploadError] = useState('');
+  const [uploading, setUploading] = useState(false);
+
+  console.log('formData', formData);
+
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + '_' + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {},
+        (err) => {
+          reject(err);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        },
+      );
+    });
+  };
+
+  const handleImageSubmit = () => {
+    if (files.length > 0 && formData.imageUrls.length + files.length < 7) {
+      const promises = [];
+
+      setUploading(true);
+      setFileUploadError('');
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
+
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.concat(urls),
+          });
+          setFileUploadError('');
+          setUploading(false);
+        })
+        .catch(() => {
+          setFileUploadError('Error uploading the images');
+          setUploading(false);
+        });
+    } else {
+      setFileUploadError(
+        'Only 6 images are allowed to be uploaded per listing.',
+      );
+    }
+  };
+
+  const handleRemoveImage = (url) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((urlString) => urlString !== url),
+    });
+  };
+
   return (
     <main className='p-3 max-w-6xl mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>
@@ -118,13 +194,42 @@ export default function CreateListing() {
               className='p-3 border border-gray-300 rounded w-full'
               type='file'
               id='images'
-              accept='imagest/*'
+              accept='image/*'
               multiple
+              onChange={(e) => setFiles(e.target.files)}
             />
-            <button className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'>
-              Upload
+            <button
+              type='button'
+              className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
+              onClick={handleImageSubmit}
+              disabled={uploading}
+            >
+              {uploading ? 'Uploading..' : 'Upload'}
             </button>
           </div>
+          {fileUploadError && (
+            <p className='text-red-700 text-sm'>{fileUploadError}</p>
+          )}
+          {formData.imageUrls.length > 0 &&
+            formData.imageUrls.map((url) => (
+              <div
+                key={url}
+                className='flex justify-between p-3 border items-center'
+              >
+                <img
+                  src={url}
+                  alt='image_listing'
+                  className='w-20 h-20 object-cover rounded-lg'
+                />
+                <button
+                  type='button'
+                  onClick={handleRemoveImage.bind(null, url)}
+                  className='p-3 text-red-700 rounded-lg hover:opacity-75'
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           <button className='bg-slate-700 p-3 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-8-'>
             create listing
           </button>
