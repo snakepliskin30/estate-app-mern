@@ -22,11 +22,11 @@ const listingSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    bathrooms: {
+    bathroom: {
       type: Number,
       required: true,
     },
-    bedrooms: {
+    bedroom: {
       type: Number,
       required: true,
     },
