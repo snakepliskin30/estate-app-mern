@@ -3,6 +3,7 @@ import {
   test,
   updateUser,
   deleteUser,
+  getUserListings,
 } from '../controllers/user.controller.js';
 import { verifyUser } from '../utils/verify-user.js';
 
@@ -11,5 +12,6 @@ const router = express.Router();
 router.get('/test', test);
 router.post('/userupdate/:id', verifyUser, updateUser);
 router.delete('/delete/:id', verifyUser, deleteUser);
+router.get('/listings/:id', verifyUser, getUserListings);
 
 export default router;
