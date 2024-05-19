@@ -28,6 +28,7 @@ export const deleteListing = async (req, res, next) => {
 };
 
 export const updateListing = async (req, res, next) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     const listing = await Listing.findById(req.params.id);
 
@@ -72,6 +73,19 @@ export const updateListing = async (req, res, next) => {
     );
 
     res.status(201).json(updatedListing);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    console.log('listing', listing);
+
+    if (!listing) return next(errorHandler(401, 'Listing not found'));
+
+    res.status(200).json(listing);
   } catch (err) {
     next(err);
   }
