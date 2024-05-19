@@ -143,7 +143,6 @@ export default function CreateListing() {
         setFormError(data.message);
         setFormSubmitLoading(false);
       } else {
-        console.log('listing_data', data);
         setFormSubmitLoading(false);
         navigate(`/listing/${data._id}`);
       }
