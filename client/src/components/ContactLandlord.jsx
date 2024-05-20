@@ -39,7 +39,7 @@ export default function ContactLandlord({ listingInfo }) {
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
           <Link
-            className='bg-slate-700 p-3 text-white text-center rounded-lg hover:opacity-95'
+            className='bg-slate-700 p-3 text-white text-center rounded-lg hover:opacity-95 uppercase'
             to={`mailto:${landlordInfo.email}?subject=Inquiring about ${listingInfo.name}&body=${message}`}
           >
             Send Message
