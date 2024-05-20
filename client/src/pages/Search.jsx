@@ -11,6 +11,8 @@ export default function Search() {
     sort: 'createdAt',
     order: 'desc',
   });
+  const [searchResult, setSearchResult] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -68,6 +70,19 @@ export default function Search() {
   };
 
   useEffect(() => {
+    const searchListing = async (urlSearchParamsString) => {
+      try {
+        setLoading(true);
+        setSearchResult([]);
+        const res = await fetch(`/api/listing/search?${urlSearchParamsString}`);
+        const data = await res.json();
+        setSearchResult(data);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+      }
+    };
+
     const urlSearchParams = new URLSearchParams(location.search);
     const url_searchTerm = urlSearchParams.get('searchTerm');
     const url_type = urlSearchParams.get('type');
@@ -91,6 +106,8 @@ export default function Search() {
         order: url_order,
       };
     });
+
+    searchListing(urlSearchParams.toString());
   }, [location.search]);
 
   return (
