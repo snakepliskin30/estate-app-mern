@@ -287,7 +287,7 @@ export default function UpdateListing() {
                 type='number'
                 id='regularPrice'
                 min='1'
-                max='1000000'
+                max='10000000'
                 required
                 onChange={handleChange}
                 value={formData.regularPrice}
@@ -304,7 +304,7 @@ export default function UpdateListing() {
                   type='number'
                   id='discountedPrice'
                   min='1'
-                  max='2000'
+                  max='10000000'
                   required
                   onChange={handleChange}
                   value={formData.discountedPrice}

@@ -13,17 +13,17 @@ export default function CreateListing() {
   const [files, setFiles] = useState({});
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name: 'rod',
-    description: 'snake',
-    address: 'safdsfsf',
+    name: '',
+    description: '',
+    address: '',
     type: 'sale',
-    bedroom: 1,
-    bathroom: 2,
-    regularPrice: 50,
-    discountedPrice: 60,
-    offer: true,
-    parking: true,
-    furnished: true,
+    bedroom: 0,
+    bathroom: 0,
+    regularPrice: 0,
+    discountedPrice: 0,
+    offer: false,
+    parking: false,
+    furnished: false,
   });
   const [fileUploadError, setFileUploadError] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -273,7 +273,7 @@ export default function CreateListing() {
                 type='number'
                 id='regularPrice'
                 min='1'
-                max='1000000'
+                max='10000000'
                 required
                 onChange={handleChange}
                 value={formData.regularPrice}
@@ -290,7 +290,7 @@ export default function CreateListing() {
                   type='number'
                   id='discountedPrice'
                   min='1'
-                  max='2000'
+                  max='10000000'
                   required
                   onChange={handleChange}
                   value={formData.discountedPrice}
