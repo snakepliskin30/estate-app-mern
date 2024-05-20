@@ -132,7 +132,7 @@ export default function Listing() {
                     {`$
                     ${(
                       +listingInfo.regularPrice - +listingInfo.discountedPrice
-                    ).toLocaleString('en-US')}`}
+                    ).toLocaleString('en-US')} OFF`}
                   </p>
                 )}
               </div>

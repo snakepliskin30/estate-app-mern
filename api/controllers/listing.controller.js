@@ -92,7 +92,9 @@ export const getListing = async (req, res, next) => {
   }
 };
 
-export const getAllListing = async (req, res, next) => {
+export const searchListing = async (req, res, next) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   try {
     // Ganito sya gagana, halimbawa may 19 records
     // since ang limit ay 9 at startIndex ay 0, ang
