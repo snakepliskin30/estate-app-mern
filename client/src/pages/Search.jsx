@@ -12,8 +12,9 @@ export default function Search() {
     sort: 'createdAt',
     order: 'desc',
   });
-  const [searchResult, setSearchResult] = useState([]);
+  const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -73,11 +74,15 @@ export default function Search() {
     const searchListing = async (urlSearchParamsString) => {
       try {
         setLoading(true);
-        setSearchResult([]);
+        setListings([]);
+        setShowMore(false);
         const res = await fetch(`/api/listing/search?${urlSearchParamsString}`);
         const data = await res.json();
-        setSearchResult(data);
+        setListings(data);
         setLoading(false);
+        if (data.length > 8) {
+          setShowMore(true);
+        }
       } catch (err) {
         setLoading(false);
       }
@@ -109,6 +114,20 @@ export default function Search() {
 
     searchListing(urlSearchParams.toString());
   }, [location.search]);
+
+  const onClickShowMore = async () => {
+    setShowMore(false);
+    const urlSearchParams = new URLSearchParams(location.search);
+    const startIndex = listings.length;
+    urlSearchParams.set('startIndex', startIndex);
+    const newUrlSearchParams = urlSearchParams.toString();
+    const res = await fetch(`/api/listing/search?${newUrlSearchParams}`);
+    const data = await res.json();
+    if (data > 8) {
+      setShowMore(true);
+    }
+    setListings([...listings, ...data]);
+  };
 
   return (
     <div className='flex flex-col md:flex-row'>
@@ -217,7 +236,7 @@ export default function Search() {
           Listing results:
         </h1>
         <div className='p-7 flex flex-wrap gap-4'>
-          {!loading && searchResult.length === 0 && (
+          {!loading && listings.length === 0 && (
             <p className='text-xl text-slate-700'>No listing found.</p>
           )}
           {loading && (
@@ -226,11 +245,20 @@ export default function Search() {
             </p>
           )}
           {!loading &&
-            searchResult.length > 0 &&
-            searchResult.map((listing) => (
+            listings.length > 0 &&
+            listings.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}
         </div>
+
+        {showMore && (
+          <button
+            className='w-full text-center font-semibold p-6 text-green-700 hover:underline'
+            onClick={onClickShowMore}
+          >
+            Show more
+          </button>
+        )}
       </div>
     </div>
   );
