@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default function ListingCard({ listing }) {
   return (
     <Link to={`/listing/${listing._id}`}>
-      <div className='group flex flex-col shadow-md hover:shadow-lg transition-shadow border rounded-lg w-full sm:w-[330px] overflow-hidden'>
+      <div className='group flex flex-col shadow-md hover:shadow-lg transition-shadow border rounded-lg w-full sm:w-[300px] overflow-hidden'>
         <div
           style={{
             background: `url(${listing.imageUrls[0]}) center no-repeat`,
