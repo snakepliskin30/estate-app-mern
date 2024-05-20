@@ -68,3 +68,17 @@ export const getUserListings = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getUserData = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) return next(errorHandler(401, 'User data not found.'));
+
+    const { password, ...rest } = user._doc;
+
+    res.status(200).json(rest);
+  } catch (err) {
+    next(err);
+  }
+};

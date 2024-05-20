@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { register } from 'swiper/element/bundle';
 import {
@@ -9,14 +10,17 @@ import {
   FaParking,
   FaShare,
 } from 'react-icons/fa';
+import ContactLandlord from '../components/ContactLandlord';
 
 register();
 
 export default function Listing() {
+  const { currentUser } = useSelector((state) => state.user);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [listingInfo, setListingInfo] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [contactLandlord, setContactLandlord] = useState(false);
   const params = useParams();
 
   const swiperElRef = useRef(null);
@@ -105,7 +109,7 @@ export default function Listing() {
                 Link copied!
               </p>
             )}
-            <div className='max-w-5xl mx-auto p-3 flex flex-col gap-2'>
+            <div className='max-w-4xl mx-auto p-3 flex flex-col gap-4'>
               <div className='text-3xl font-semibold my-4 text-center'>
                 {listingInfo.name} - ${' '}
                 {listingInfo.offer
@@ -156,6 +160,18 @@ export default function Listing() {
                   {listingInfo.furnished ? `Furnished` : `Unfurnished`}
                 </li>
               </ul>
+
+              {currentUser &&
+                currentUser?._id !== listingInfo.userRef &&
+                !contactLandlord && (
+                  <button
+                    className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'
+                    onClick={() => setContactLandlord(true)}
+                  >
+                    Contact Landlord
+                  </button>
+                )}
+              {contactLandlord && <ContactLandlord listingInfo={listingInfo} />}
             </div>
           </>
         )}
