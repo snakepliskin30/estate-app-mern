@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken';
 export const signup = async (req, res, next) => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
   const { username, email, password } = req.body;
-  console.log(username, email, password);
   const hashedPassword = bcryptjs.hashSync(password, 10);
   const newUser = new User({ username, email, password: hashedPassword });
   try {
@@ -54,11 +53,9 @@ export const googleAuth = async (req, res, next) => {
   try {
     let userObject;
     const { username, email, photoUrl } = req.body;
-    console.log(username, email, photoUrl);
 
     // check if email exist already
     const validUser = await User.findOne({ email });
-    console.log('validUser', validUser);
 
     if (!validUser) {
       const password =
@@ -79,8 +76,6 @@ export const googleAuth = async (req, res, next) => {
       const { password, ...rest } = validUser._doc;
       userObject = rest;
     }
-
-    console.log('user_object', userObject);
 
     const token = jwt.sign({ id: userObject._id }, process.env.JWT_SECRET);
     res.cookie('access-token', token).status(200).json(userObject);

@@ -82,7 +82,6 @@ export const getListing = async (req, res, next) => {
   // await new Promise((resolve) => setTimeout(resolve, 1000));
   try {
     const listing = await Listing.findById(req.params.id);
-    console.log('listing', listing);
 
     if (!listing) return next(errorHandler(401, 'Listing not found'));
 

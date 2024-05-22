@@ -2,9 +2,7 @@ export default function About() {
   return (
     <div className='p-8 flex flex-col gap-5 max-w-3xl mx-auto'>
       <div className='flex flex-col items-center'>
-        <h1 className='font-bold text-3xl text-slate-700'>
-          About SnakePliskin Estate
-        </h1>
+        <h1 className='font-bold text-3xl text-slate-700'>About RodEstate</h1>
         <p className='font-bold text-slate-800'>
           <span className='text-slate-500'>Built By: </span>Rod Tolaresa Jr
           (rodtolaresa@yahoo.com)
