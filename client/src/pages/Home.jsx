@@ -42,8 +42,7 @@ export default function Home() {
           place with ease
         </h1>
         <div className='text-gray-400 text-xs sm:text-sm'>
-          SnakePliskin Estate is the best place to find your next perfect place
-          to live.
+          RodEstate is the best place to find your next perfect place to live.
           <br />
           We have a wind range of properties for you to choose from.
         </div>
