@@ -54,7 +54,6 @@ export default function Search() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(searchFormData);
     const urlSearchParams = new URLSearchParams(location.search);
     urlSearchParams.set('searchTerm', searchFormData.searchTerm);
     urlSearchParams.set('type', searchFormData.type);
@@ -129,8 +128,6 @@ export default function Search() {
     }
     setListings([...listings, ...data]);
   };
-
-  console.log('mount', searchFormData);
 
   return (
     <div className='flex flex-col md:flex-row'>
