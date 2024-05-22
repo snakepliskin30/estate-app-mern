@@ -26,9 +26,14 @@ export default function Header() {
 
   return (
     <header className='bg-slate-200 shadow-md'>
-      <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
+      <div className='flex justify-between items-center max-w-6xl mx-auto py-3 sm:py-0.5 px-3'>
         <Link to='/'>
-          <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
+          <h1 className='font-bold text-sm sm:text-xl flex items-center flex-nowrap'>
+            <img
+              src='/logo.png'
+              alt=''
+              className='hidden sm:inline-block sm:h-20 sm:w-20'
+            />
             <span className='text-slate-500'>Rod</span>
             <span className='text-slate-700'>Estate</span>
           </h1>
