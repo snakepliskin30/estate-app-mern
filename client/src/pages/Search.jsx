@@ -54,6 +54,7 @@ export default function Search() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(searchFormData);
     const urlSearchParams = new URLSearchParams(location.search);
     urlSearchParams.set('searchTerm', searchFormData.searchTerm);
     urlSearchParams.set('type', searchFormData.type);
@@ -103,12 +104,12 @@ export default function Search() {
       return {
         ...prev,
         searchTerm: url_searchTerm,
-        type: url_type,
-        parking: url_parking,
-        furnished: url_furnished,
-        offer: url_offer,
-        sort: url_sort,
-        order: url_order,
+        type: url_type ? url_type : 'all',
+        parking: url_parking ? url_parking : false,
+        furnished: url_furnished ? url_furnished : false,
+        offer: url_offer ? url_offer : false,
+        sort: url_sort ? url_sort : 'regularPrice',
+        order: url_order ? url_order : 'desc',
       };
     });
 
@@ -128,6 +129,8 @@ export default function Search() {
     }
     setListings([...listings, ...data]);
   };
+
+  console.log('mount', searchFormData);
 
   return (
     <div className='flex flex-col md:flex-row'>
