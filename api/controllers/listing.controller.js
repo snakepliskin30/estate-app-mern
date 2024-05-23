@@ -2,7 +2,7 @@ import Listing from '../models/listing.model.js';
 import { errorHandler } from '../utils/error-handler.js';
 
 export const createListing = async (req, res, next) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     const listing = await Listing.create(req.body);
 
@@ -28,7 +28,7 @@ export const deleteListing = async (req, res, next) => {
 };
 
 export const updateListing = async (req, res, next) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     const listing = await Listing.findById(req.params.id);
 
@@ -92,7 +92,7 @@ export const getListing = async (req, res, next) => {
 };
 
 export const searchListing = async (req, res, next) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   try {
     // Ganito sya gagana, halimbawa may 19 records

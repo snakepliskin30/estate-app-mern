@@ -11,7 +11,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
   // check if parameter matches the token id
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   if (req.params.id !== req.user.id)
     return next(errorHandler(401, 'Please log in'));
 
