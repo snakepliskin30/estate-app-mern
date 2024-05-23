@@ -26,7 +26,7 @@ export default function Header() {
 
   return (
     <header className='bg-slate-200 shadow-md'>
-      <div className='flex justify-between items-center max-w-6xl mx-auto py-3 sm:py-0.5 px-3'>
+      <div className='flex justify-between items-center max-w-6xl mx-auto py-3 sm:py-0.5 px-3 font-semibold'>
         <Link to='/'>
           <h1 className='font-bold text-sm sm:text-xl flex items-center flex-nowrap'>
             <img
@@ -57,7 +57,7 @@ export default function Header() {
           <li className='hidden sm:inline text-slate-700 hover:underline cursor-pointer'>
             <Link to='/'>Home</Link>
           </li>
-          <li className='hidden sm:inline text-slate-700 hover:underline cursor-pointer'>
+          <li className='hidden sm:inline text-slate-700 hover:underline cursor-pointer animate-pulse'>
             <Link to='/about'>About</Link>
           </li>
           <li className='text-slate-700 hover:underline cursor-pointer'>

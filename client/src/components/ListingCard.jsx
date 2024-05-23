@@ -1,10 +1,32 @@
+import { useRef } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
+
+const MotionLink = motion(Link);
 
 /* eslint-disable react/prop-types */
 export default function ListingCard({ listing }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['0 1', '1.5 1'],
+  });
+  const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.3, 1]);
+
   return (
-    <Link to={`/listing/${listing._id}`}>
+    <MotionLink
+      to={`/listing/${listing._id}`}
+      ref={ref}
+      // href={`/listing/${listing._id}`}
+      style={{
+        // @ts-ignore
+        scale: scaleProgress,
+        // @ts-ignore
+        opacity: opacityProgress,
+      }}
+    >
       <div className='group flex flex-col shadow-md hover:shadow-lg transition-shadow border rounded-lg w-full sm:w-[300px] overflow-hidden'>
         <div
           style={{
@@ -39,6 +61,6 @@ export default function ListingCard({ listing }) {
           </div>
         </div>
       </div>
-    </Link>
+    </MotionLink>
   );
 }
